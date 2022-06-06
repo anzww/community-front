@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
+import { useUserStore } from "@/store/user";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -39,6 +40,19 @@ const router = createRouter({
   // history 模式,hash模式:createWebHashHistory()
   history: createWebHashHistory(),
   routes
+});
+
+router.beforeEach((to, from) => {
+  const user = useUserStore();
+  if (to.name !== "login" && !user.access_token) {
+    return { name: "login" };
+  } else {
+    if (to.name === "login" && user.access_token) {
+      return "/";
+    } else {
+      return true;
+    }
+  }
 });
 
 export default router;

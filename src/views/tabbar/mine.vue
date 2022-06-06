@@ -3,28 +3,16 @@
     <van-nav-bar title="我的" />
     <header class="mt-2 pd-12">
       <div class="d-flex mt-4">
-        <img src="" alt="" />
+        <van-uploader v-if="fileList.length" v-model="fileList" max-count="1" :deletable="false" />
+        <van-uploader v-else v-model="fileList" :after-read="afterRead" max-count="1" />
         <div class="d-flex flex-column j-sa">
-          <div class="name">铁憨憨</div>
-          <div class="tel">13912341234</div>
+          <div class="name">{{ userInfo.username }}</div>
+          <div class="tel">{{ userInfo.mobile }}</div>
         </div>
       </div>
-      <div class="money pd-15">
-        <div>账户余额</div>
-        <div class="d-flex j-sb a-center mt-2">
-          <div class="item">
-            <div class="count">19800.10</div>
-            <div class="item_name">钱包余额</div>
-          </div>
-          <div class="item">
-            <div class="count">19800.10</div>
-            <div class="item_name">运费余额</div>
-          </div>
-          <div class="item">
-            <div class="count">1234</div>
-            <div class="item_name">卡券中心</div>
-          </div>
-        </div>
+      <div class="d-flex mt-5">
+        <div class="ml-2"><i style="color: #333333">9</i> 获赞</div>
+        <div class="ml-6"><i style="color: #333333">9</i> 粉丝</div>
       </div>
     </header>
     <div class="mt-5">
@@ -45,7 +33,11 @@
 <script setup lang="ts">
 import Tabbar from "@/components/tabbar.vue";
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/store/user";
+import { ref } from "vue";
+import { uploadAvatar } from "./api";
 
+const user = useUserStore();
 const router = useRouter();
 const list: object[] = [
   {
@@ -73,6 +65,15 @@ const list: object[] = [
   }
 ];
 const linkTo = (url: string) => router.push(url);
+// todo pending completed
+const afterRead = async (file: object) => {
+  // 此时可以自行将文件上传至服务器
+  console.log(file);
+  const res = await uploadAvatar(file);
+  console.log(res);
+};
+const { userInfo } = user;
+const fileList = ref([]);
 </script>
 
 <style lang="less" scoped>
@@ -80,10 +81,9 @@ header {
   background: @white;
   color: #999;
   height: 190px;
-  position: relative;
   img {
-    width: 60px;
-    height: 60px;
+    width: 90px;
+    height: 90px;
     margin: 0 12px;
   }
   .name {
@@ -93,25 +93,11 @@ header {
   .tel {
     font-size: 15px;
   }
-}
-.money {
-  background: linear-gradient(82deg, #fd6a7b 0%, #ff556b 100%);
-  border-radius: 4px;
-  position: absolute;
-  bottom: -15px;
-  width: 85.5%;
-  color: @white;
-  font-size: 14px;
-  .item {
-    text-align: center;
-    .count {
-      font-size: 18px;
-    }
-    .item_name {
-      font-size: 13px;
-    }
+  i {
+    font-size: 18px;
   }
 }
+
 .list_item {
   .title {
     color: #333;
