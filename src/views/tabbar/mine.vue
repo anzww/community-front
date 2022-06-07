@@ -6,7 +6,7 @@
         <van-uploader v-if="fileList.length" v-model="fileList" max-count="1" :deletable="false" />
         <van-uploader v-else v-model="fileList" :after-read="afterRead" max-count="1" />
         <div class="d-flex flex-column j-sa">
-          <div class="name">{{ userInfo.username }}</div>
+          <div class="name">{{ userInfo.nickname }}</div>
           <div class="tel">{{ userInfo.mobile }}</div>
         </div>
       </div>
@@ -36,7 +36,12 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/user";
 import { ref } from "vue";
 import { uploadAvatar } from "./api";
-
+interface fileType {
+  file: Blob;
+  status: string;
+  message: string;
+  content: string;
+}
 const user = useUserStore();
 const router = useRouter();
 const list: object[] = [
@@ -64,16 +69,17 @@ const list: object[] = [
     id: 2
   }
 ];
-const linkTo = (url: string) => router.push(url);
-// todo pending completed
-const afterRead = async (file: object) => {
-  // 此时可以自行将文件上传至服务器
-  console.log(file);
-  const res = await uploadAvatar(file);
-  console.log(res);
-};
+const fileList = ref([] as object[]);
 const { userInfo } = user;
-const fileList = ref([]);
+const linkTo = (url: string) => router.push(url);
+const afterRead = async (file: fileType) => {
+  const formData = new FormData();
+  formData.append("file", file.file);
+  const res = await uploadAvatar(formData);
+  if (!res.code) {
+    fileList.value = [{ url: `http://localhost:8000${res.data}` }];
+  }
+};
 </script>
 
 <style lang="less" scoped>

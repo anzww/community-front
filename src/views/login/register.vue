@@ -1,5 +1,5 @@
 <template>
-  <van-nav-bar title="注册" />
+  <van-nav-bar title="注册" left-arrow @click-left="router.back()" />
   <van-form class="mt-3" label-width="100" @submit="onSubmit">
     <van-cell-group inset>
       <van-field

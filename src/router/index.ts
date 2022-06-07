@@ -44,6 +44,7 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   const user = useUserStore();
+  if (to.name === "register") return true;
   if (to.name !== "login" && !user.access_token) {
     return { name: "login" };
   } else {

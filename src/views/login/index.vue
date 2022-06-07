@@ -20,6 +20,7 @@
       >
       </van-field>
     </van-cell-group>
+    <div class="ml-4 mt-4 register" @click="router.push('/register')">去注册</div>
     <div style="margin: 16px">
       <van-button round block type="primary" native-type="submit"> 提交 </van-button>
     </div>
@@ -51,3 +52,9 @@ const onSubmit = async () => {
   }
 };
 </script>
+<style lang="less" scoped>
+.register {
+  font-size: 14px;
+  color: #1989fa;
+}
+</style>
