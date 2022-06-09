@@ -34,7 +34,7 @@
 import Tabbar from "@/components/tabbar.vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/user";
-import { ref } from "vue";
+import { reactive, toRefs } from "vue";
 import { uploadAvatar } from "./api";
 interface fileType {
   file: Blob;
@@ -69,17 +69,21 @@ const list: object[] = [
     id: 2
   }
 ];
-const fileList = ref([] as object[]);
+const state = reactive({ fileList: [] as object[] });
 const { userInfo } = user;
+if (userInfo.avatar) {
+  state.fileList = [{ url: `http://localhost:8000${userInfo.avatar}` }];
+}
 const linkTo = (url: string) => router.push(url);
 const afterRead = async (file: fileType) => {
   const formData = new FormData();
   formData.append("file", file.file);
   const res = await uploadAvatar(formData);
   if (!res.code) {
-    fileList.value = [{ url: `http://localhost:8000${res.data}` }];
+    state.fileList = [{ url: `http://localhost:8000${res.data.url}` }];
   }
 };
+const { fileList } = toRefs(state);
 </script>
 
 <style lang="less" scoped>

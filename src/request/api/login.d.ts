@@ -1,4 +1,4 @@
-export interface registerType {
+export interface registerDto {
   username: string;
   mobile: string;
   email: string;
@@ -7,7 +7,7 @@ export interface registerType {
   nickname: string;
 }
 
-export interface loginType {
+export interface loginDto {
   username: string;
   password: string;
 }
